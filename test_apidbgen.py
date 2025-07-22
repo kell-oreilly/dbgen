@@ -1,0 +1,89 @@
+from playwright.sync_api import Playwright, APIRequestContext
+from typing import Generator
+import dbgen
+import pytest
+
+
+@pytest.fixture(scope="session")
+def api_request_context(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
+    request_context = playwright.request.new_context(
+        base_url="http://127.0.0.1:5000/"
+    )
+    yield request_context
+    request_context.dispose()
+
+
+def test(api_request_context: APIRequestContext):
+    #'Might have some setup, passing schema to API,
+    # create json object representing schema
+    response = api_request_context.get("schemas")  #RESTFULetc
+    assert response.ok #200
+    body = response.json()
+    
+
+def test_create_schema_success(api_request_context: APIRequestContext):
+    #'/schemas/<string:schema_id>'
+    test_schema = {
+    "email_address": "email",
+    "local_ip": "ip",
+    "destination_ip": "ip"
+    }
+    schema_id = "test_id"
+   # expected_response = 201
+    schemas = {} # To ensure no duplicates
+    response = api_request_context.post(f"/schemas/{schema_id}", data=test_schema)
+    assert response.status == 201
+
+    
+
+def test_create_schema_duplicate_id(api_request_context: APIRequestContext):
+    #'/schemas/<string:schema_id>'
+    test_schema = {
+    "email_address": "email",
+    "local_ip": "ip",
+    "destination_ip": "ip"
+    }
+    schema_id = "test_id"
+   # expected_response = 201
+    schemas = {schema_id: test_schema} # new posted instance will be duplicate
+    response = api_request_context.post(f"/schemas/{schema_id}", data=test_schema)
+    assert response.status == 400
+
+def test_get_schemas(api_request_context: APIRequestContext):
+    response = api_request_context.get('schemas')
+    assert response.status == 200
+
+#Working
+#Successful data generation example checking framework
+def test_get_data_success(api_request_context: APIRequestContext):
+    test_schema = {
+    "email_address": "email",
+    "local_ip": "ip",
+    "destination_ip": "ip"
+    }
+    schema_id = "test_id"
+    api_request_context.post(f"/schemas/{schema_id}", data=test_schema)
+    test_n_docs = 4
+    response = api_request_context.get(f"/schemas/{schema_id}?{str(test_n_docs)}", data=test_schema)
+   # response = client.get(f'/schemas/{schema_id}')
+    assert len(response.json()) == test_n_docs
+    assert response.ok
+    assert all(set(doc.keys()) == {"email_address", "local_ip", "destination_ip"} for doc in response.json())
+
+
+def test_get_data_invalid_schema(api_request_context: APIRequestContext):
+    response = api_request_context.get("/schemas/non_existent_schema?n_docs=3")
+    assert response.status == 500
+
+
+def test_get_data_negative_docs(api_request_context: APIRequestContext):
+    schema_id = "negative_docs"
+    test_schema = {
+    "email_address": "email",
+    "local_ip": "ip",
+    "destination_ip": "ip"
+    }
+    api_request_context.post(f"/schemas/{schema_id}", data=test_schema)
+    response = api_request_context.get(f"/schemas/{schema_id}?n_docs=-5")
+    assert response.status == 200
+    assert response.json() == []
