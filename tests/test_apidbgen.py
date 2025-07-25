@@ -1,6 +1,6 @@
 from playwright.sync_api import Playwright, APIRequestContext
 from typing import Generator
-import apidbgen
+import dbgen
 import pytest
 
 
