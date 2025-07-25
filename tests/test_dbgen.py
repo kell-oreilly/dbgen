@@ -1,4 +1,4 @@
-import dbgen
+from dbgen import data_generate
 import pytest
 
 
@@ -21,7 +21,7 @@ def test_data_generate():
     }
     schema_id = "test_id"
     test_n_docs = 4
-    result = dbgen.data_generate(test_schema, test_n_docs)
+    result = data_generate(test_schema, test_n_docs)
     assert len(result) == test_n_docs
     assert all(set(doc.keys()) == {"email_address", "local_ip", "destination_ip"} for doc in result)
 
@@ -34,7 +34,7 @@ def test_data_generate_incorrect_n_docs():
     }
     schema_id = "test_id"
     test_n_docs = -4
-    result = dbgen.data_generate(test_schema, test_n_docs)
+    result = data_generate(test_schema, test_n_docs)
     assert len(result) == 0
     assert result == []
 
