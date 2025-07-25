@@ -1,9 +1,11 @@
 from faker import Faker
 import random
 import json
-from flask import Flask, request
 
-app = Flask(__name__)
+# import json
+# from flask import Flask, request
+
+# app = Flask(__name__)
 
 faker = Faker()
 
@@ -47,17 +49,17 @@ valid_dtypes = {
     'l_name': lambda i, opts={}: faker.last_name(),
     'date': lambda i, opts={}: faker.date_between(
         start_date=opts.get('start', '-30y'),
-        end_date=opts.get('end', 'today')
+        end_date=opts.get('end', '-5y')
     ).isoformat(),
     'ip': lambda i, opts={}: faker.ipv4(),
     'email': lambda i, opts={}: f"{opts.get('first', faker.first_name())}.{opts.get('last', faker.last_name())}@{faker.free_email_domain()}".lower(),
     'country_code': lambda i, opts={}: faker.country_code(representation="alpha-2"),
-    #'price': lambda i, opts={}: f"{opts.get('symbol', '£')}{random.uniform(opts.get('min', 0), opts.get('max', 1000)):.{opts.get('dec', 2)}f}",
+    'price': lambda i, opts={}: f"{opts.get('currency', '$')}{random.uniform(opts.get('min', 0), opts.get('max', 1000)):.{opts.get('dec', 2)}f}",
     'para': lambda i, opts={}: faker.paragraph(),
     'bool': lambda i, opts={}: bool(random.getrandbits(1)),
     #'int': lambda i, opts={}:,
     #'string': lambda i, opts={}:,
-    #'set': lambda i, opts={}: []
+    #'set': lambda i, opts={}: opts.get('list', [])
 }
 
 
@@ -70,6 +72,8 @@ def convert_opts(opt_str):
         )
     except Exception:
         print("Please use valid options format: key=value, key2=value2...")
+        print("For 'set', use  'list', as key and [item1,item2...] as value")
+
         return None
 
 
@@ -100,6 +104,8 @@ def usr_schema_build():
                 continue
 
             while True:
+                print("Please use valid options format: key=value, key2=value2...")
+                print("For 'set', use  'list', as key and [item1,item2...] as value")
                 opts_input = input(f'Enter {key} options or type "none" or "reselect": ').strip()
 
                 if opts_input.lower() == 'none':
@@ -181,66 +187,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# TODO Store schemas using sqlite 3 to prevent reset
-# TODO Catch more exceptions
-schemas = {}
-
-
-# Endpoints appcontext/version/recourse?parameter
-# Add correctly formatted output to all three
-@app.post('/schemas/<string:schema_id>')
-def create_schema(schema_id):
-    # TODO check schema format is correct, some instances
-    # where flask does valid, configure flask to use json instead
-    # return errors as json instead of html
-    # generate error decorator possibly
-    # TODO Fix this
-    try:
-        schema = request.get_json()
-    except ValueError:
-        return {
-            'error': 'Incorrectly formatted json file'
-        }, 400
-
-    # Exception schema_id already exists 400
-    if schema_id in schemas.keys():
-        return {
-            'error': f'Schema ID: {schema_id} taken'
-        }, 400
-    schemas[schema_id] = schema
-    return schema, 201  # created
-
-# TODO Delete schema
-
-
-# TODO Put schema to replace schema
-
-
-# TODO Patch schema for minor schema edits
-
-
-@app.get('/schemas')
-def get_schemas():
-    return schemas, 200  # General ok
-
-
-@app.get('/schemas/<string:schema_id>')
-def get_data(schema_id):
-    n_docs = request.args.get('n_docs', default=3, type=int)
-    # Raise requested recourse does not exist 404
-
-    # Exception: n_docs not positive interger
-
-    # 201 if data saved to recourse - store somewhere
-    return data_generate(schemas[schema_id], n_docs), 200
-
-
-# TODO Post generated data
-
-
-# TODO Post generated data
-
-
-# TODO PUT modify generated data
