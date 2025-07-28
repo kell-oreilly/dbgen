@@ -34,7 +34,7 @@ def create_schema(schema_id):
 
     # Handle exception url schema id does not match schema name - maybe not could just be redundant
 
-    schema_id = schema['schema_name']
+    #schema_id = schema['schema_name']
     # Exception schema_id already exists 400
     if schema_id in schemas.keys():
         return {

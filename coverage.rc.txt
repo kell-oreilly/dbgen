@@ -2,8 +2,10 @@
 omit = 
     tests/*
     */__init__.py
+    databasegen/apidbgen.py
 
 [report]
 exclude_lines =
     pragma: no cover
     def main():
+    app = Flask(__name__)
