@@ -94,14 +94,10 @@ def test_data_generate_email_depends_on_name():
     assert data['l_name'].lower() in data['email']
 
 def test_usr_num_docs():
-    with patch('builtins.input', side_effect=['3']):
+    with patch('builtins.input', side_effect=['a','-5','3']):
         result = dbgen.usr_num_docs()
         assert result == 3
 
-def test_usr_num_docs():
-    with patch('builtins.input', side_effect=['3']):
-        result = dbgen.usr_num_docs()
-        assert result == 3
 
 # Testing user schema build
 def test_usr_schema_build():
