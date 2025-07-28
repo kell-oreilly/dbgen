@@ -80,7 +80,7 @@ def test_get_data_success(api_request_context: APIRequestContext):
 
 def test_get_data_invalid_schema(api_request_context: APIRequestContext):
     response = api_request_context.get("/schemas/non_existent_schema/schema?n_docs=3")
-    assert response.status == 404
+    assert response.status == 400
 
 
 def test_get_data_negative_docs(api_request_context: APIRequestContext):
@@ -94,4 +94,4 @@ def test_get_data_negative_docs(api_request_context: APIRequestContext):
     }
     api_request_context.post(f"/schemas/{schema_id}/schema", data=test_schema)
     response = api_request_context.get(f"/schemas/{schema_id}/schema?n_docs=-5")
-    assert response.status == 404
+    assert response.status == 400
