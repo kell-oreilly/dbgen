@@ -94,4 +94,4 @@ def test_get_data_negative_docs(api_request_context: APIRequestContext):
     }
     api_request_context.post(f"/schemas/{schema_id}/schema", data=test_schema)
     response = api_request_context.get(f"/schemas/{schema_id}/schema?n_docs=-5")
-    assert response.status == 404
+    assert response.status == 400
