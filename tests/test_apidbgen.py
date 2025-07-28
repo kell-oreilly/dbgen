@@ -8,7 +8,7 @@ import pytest
 @pytest.fixture(scope="session")
 def api_request_context(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
     request_context = playwright.request.new_context(
-        base_url="http://127.0.0.1:5000/"
+        base_url="http://127.0.0.1:2374/"
     )
     yield request_context
     request_context.dispose()
