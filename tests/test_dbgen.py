@@ -1,4 +1,4 @@
-from databasegen import dbgen
+from app import dbgen
 import pytest
 import json
 from unittest.mock import patch
@@ -64,9 +64,6 @@ def test_data_generate_incorrect_n_docs():
     test_n_docs = -4
     result = dbgen.data_generate(test_schema, test_n_docs)
     assert len(result) == 0
-<<<<<<< HEAD
-    assert result == []
-=======
     assert result == []
 
 def test_valid_dtype_email_comp():
@@ -109,4 +106,3 @@ def test_usr_schema_build():
         expected ={"schema_name": "testschema","fields": {"date1": {"type": "date",
       "options": {}}}}
         assert result == expected
->>>>>>> origin/dbgen_w_parameters

@@ -1,11 +1,7 @@
 from playwright.sync_api import Playwright, APIRequestContext
 from typing import Generator
-<<<<<<< HEAD
-import dbgen
-=======
-from databasegen import dbgen
-from databasegen import apidbgen
->>>>>>> origin/dbgen_w_parameters
+from app import dbgen
+from app import apidbgen
 import pytest
 
 
@@ -75,14 +71,8 @@ def test_get_data_success(api_request_context: APIRequestContext):
     api_request_context.post(f"/schemas/{schema_id}/schema", data=test_schema)
 
     test_n_docs = 4
-<<<<<<< HEAD
-    response = api_request_context.get(f"/schemas/{schema_id}?{str(test_n_docs)}", data=test_schema)
-   # response = client.get(f'/schemas/{schema_id}')
-   # assert len(response.json()) == test_n_docs
-=======
     response = api_request_context.get(f"/schemas/{schema_id}/schema?n_docs={test_n_docs}")
 
->>>>>>> origin/dbgen_w_parameters
     assert response.ok
     assert len(response.json()) == test_n_docs
     assert all(set(doc.keys()) == {"id", "country"} for doc in response.json())
