@@ -1,6 +1,6 @@
 #import json
 from flask import Flask, request
-from databasegen import dbgen
+from app import dbgen
 from faker import Faker
 #import random
 
