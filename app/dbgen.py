@@ -1,5 +1,6 @@
 from faker import Faker
 import json
+import random
 
 # import json
 # from flask import Flask, request
@@ -91,25 +92,28 @@ def convert_opts(opt_str):
 
 # Taking input, generating schema bp
 def usr_schema_build():
-    usr_schema = {}
-
-    # Schema Blueprint - Add u_instructions help
     while True:
-        key = input('Enter key name or type "finished": ')
-        while key in usr_schema.keys():
-            print('Duplicate key name found\nEnter an original key name')
-            key = input('Enter key name or type "finished": ')
-            if key == 'finished':
-                break
-        if key == 'finished':
+        schema_name = input('Enter schema name: ')
+        confirm_schema_name = input(f'Confirm schema name?[y/n] {schema_name}: ')
+        if confirm_schema_name.lower() == 'y':
             break
 
+    usr_schema = {"schema_name": schema_name, "fields": {}}
+
+    while True:
+        key = input('Enter key name or type "finished": ').strip()
+        if key == 'finished':
+            break
+        if key in usr_schema['fields']:
+            print('Duplicate key name found\nEnter original key name')
+            continue
+
         while True:
-            dtype = input(f'Enter {key} datatype or type "rename": ')
+            dtype = input(f'Enter {key} datatype or type "rename": ').strip()
             if dtype == 'rename':
-                break
-            if dtype not in valid_dtypes.keys():
-                print('\nPlease enter a valid datatype')
+                break  # go back to key input
+            if dtype not in valid_dtypes:
+                print('Please enter a valid datatype option')
                 continue
 
             while True:
