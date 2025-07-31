@@ -28,7 +28,7 @@ def test_create_schema_success(api_request_context: APIRequestContext):
         "schema_name": "test",
         "fields": {
             "id": {"type": "id", "options": {}},
-            "country": {"type": "country_code", "options": {}},
+            "country": {"type": "country_code", "options": {}}
         }
     }
     schema_id = "test_id"
@@ -43,7 +43,7 @@ def test_create_schema_duplicate_id(api_request_context: APIRequestContext):
         "schema_name": "test",
         "fields": {
             "id": {"type": "id", "options": {}},
-            "country": {"type": "country_code", "options": {}},
+            "country": {"type": "country_code", "options": {}}
         }
     }
     schema_id = "test_id"
@@ -64,7 +64,7 @@ def test_get_data_success(api_request_context: APIRequestContext):
         "schema_name": "test_id",
         "fields": {
             "id": {"type": "id", "options": {}},
-            "country": {"type": "country_code", "options": {}},
+            "country": {"type": "country_code", "options": {}}
         }
     }
     schema_id = "test_id"
@@ -89,7 +89,7 @@ def test_get_data_negative_docs(api_request_context: APIRequestContext):
         "schema_name": "test",
         "fields": {
             "id": {"type": "id", "options": {}},
-            "country": {"type": "country_code", "options": {}},
+            "country": {"type": "country_code", "options": {}}
         }
     }
     api_request_context.post(f"/schemas/{schema_id}/schema", data=test_schema)
